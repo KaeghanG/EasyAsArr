@@ -73,7 +73,7 @@ services:
       - TZ=Etc/UTC
     volumes:
       - /home/ubuntu/docker/arr-stack/qbittorrent:/config
-     # - /home/ubuntu/docker/arr-stack/sonarr/tvseries:/tv #optional
+      - /home/ubuntu/docker/arr-stack/radarr:/tv #optional
       - /home/ubuntu/docker/arr-stack/qbittorrent/downloads:/downloads
     restart: unless-stopped
     
@@ -86,9 +86,10 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
     volumes:
-      - /home/ubuntu/docker/arr-stack/radarr/data:/config
-      - /home/ubuntu/docker/arr-stack/radarr/downloadclient-movies:/movies #optional
-      - /home/ubuntu/docker/arr-stack/radarr/downloadclient-downloads:/downloads #optional
+      - /home/ubuntu/docker/arr-stack/qbittorrent/data:/config
+      - /home/ubuntu/docker/arr-stack/qbittorrent/downloadclient-movies:/movies #optional
+      - /home/ubuntu/docker/arr-stack/qbittorrent/downloads:/downloads #optional
+      
     restart: unless-stopped
     
   prowlarr:
