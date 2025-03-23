@@ -1,79 +1,79 @@
-# EasyAsArr Docker Compose Setup
+# 🚀 EasyAsArr Docker Compose Setup
 
-Welcome to the EasyAsArr Docker Compose setup! This project simplifies the deployment of a media automation stack using Docker. It includes popular tools like Sonarr, Radarr, Prowlarr, qBittorrent, Jellyfin, and more, all routed through a VPN for enhanced privacy and security.
+Welcome to the **EasyAsArr Docker Compose** setup! 🎉 This project simplifies the deployment of a media automation stack using Docker. It includes popular tools like **Sonarr, Radarr, Prowlarr, qBittorrent, Jellyfin,** and more, all routed through a **VPN** for enhanced privacy and security. 🔒
 
-This setup uses Gluetun as a VPN client to ensure all traffic from the services is routed through a secure VPN connection. Below is a detailed explanation of the services and how they work together.
+This setup uses **Gluetun** as a VPN client to ensure all traffic from the services is routed through a secure VPN connection. Below is a detailed explanation of the services and how they work together. 🛠️
 
-## Table of Contents
-- [Prerequisites](#prerequisites)
-- [Services Overview](#services-overview)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Ports](#ports)
-- [Volumes](#volumes)
-- [Environment Variables](#environment-variables)
-- [License](#license)
+## 📌 Table of Contents
+- [⚡ Prerequisites](#-prerequisites)
+- [🛠️ Services Overview](#-services-overview)
+- [⚙️ Configuration](#-configuration)
+- [▶️ Usage](#-usage)
+- [🌍 Ports](#-ports)
+- [💾 Volumes](#-volumes)
+- [🔧 Environment Variables](#-environment-variables)
+- [📜 License](#-license)
 
-## Prerequisites
+## ⚡ Prerequisites
 Before you begin, ensure you have the following installed:
 
-- [Docker](https://docs.docker.com/get-docker/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-- A VPN subscription (e.g., NordVPN) with valid credentials.
+- [🐳 Docker](https://docs.docker.com/get-docker/)
+- [📦 Docker Compose](https://docs.docker.com/compose/install/)
+- A VPN subscription (e.g., **NordVPN**) with valid credentials.
 
-## Services Overview
+## 🛠️ Services Overview
 
-### 1. Gluetun
+### 🔹 1. Gluetun (VPN Client)
 - **Image:** `qmcgaw/gluetun`
-- **Purpose:** Acts as a VPN client to route all traffic from other containers through a secure VPN connection.
+- **Purpose:** Secures traffic from other containers through a **VPN connection**.
 - **Configuration:**
-  - Set your VPN provider (e.g., NordVPN) and credentials.
-  - Choose the VPN type (OpenVPN or WireGuard).
-  - Specify the server country (e.g., Netherlands).
+  - Set your VPN provider (e.g., **NordVPN**) and credentials.
+  - Choose VPN type (**OpenVPN** or **WireGuard**).
+  - Specify the server country (e.g., **Netherlands**).
 
-### 2. qBittorrent
+### 🔹 2. qBittorrent 🎥
 - **Image:** `lscr.io/linuxserver/qbittorrent:latest`
 - **Purpose:** A BitTorrent client for downloading media.
 - **Configuration:**
-  - Web UI accessible at port `8085`.
+  - Web UI accessible at port **8085**.
   - Default credentials: `admin/admin`.
 
-### 3. Jackett
+### 🔹 3. Jackett 🔍
 - **Image:** `lscr.io/linuxserver/jackett:latest`
-- **Purpose:** A proxy server for torrent trackers, enabling integration with Sonarr and Radarr.
+- **Purpose:** Proxy server for torrent trackers, enabling integration with Sonarr and Radarr.
 
-### 4. Sonarr
+### 🔹 4. Sonarr 📺
 - **Image:** `lscr.io/linuxserver/sonarr:latest`
-- **Purpose:** Automates TV show downloads and organization.
+- **Purpose:** Automates **TV show** downloads and organization.
 
-### 5. Radarr
+### 🔹 5. Radarr 🎬
 - **Image:** `lscr.io/linuxserver/radarr:latest`
-- **Purpose:** Automates movie downloads and organization.
+- **Purpose:** Automates **movie** downloads and organization.
 
-### 6. Prowlarr
+### 🔹 6. Prowlarr 📡
 - **Image:** `lscr.io/linuxserver/prowlarr:latest`
-- **Purpose:** Manages indexers for Sonarr and Radarr.
+- **Purpose:** Manages **indexers** for Sonarr and Radarr.
 
-### 7. Jellyfin
+### 🔹 7. Jellyfin 🍿
 - **Image:** `jellyfin/jellyfin`
-- **Purpose:** A media server for streaming your downloaded media.
+- **Purpose:** A **media server** for streaming your downloaded content.
 
-### 8. FileBrowser
+### 🔹 8. FileBrowser 📂
 - **Image:** `hurlenko/filebrowser`
-- **Purpose:** A web-based file manager for managing your media files.
+- **Purpose:** A **web-based file manager** for organizing your media files and providing an easy interface to locally download torrents from a UI.
 
-### 9. FlareSolverr
+### 🔹 9. FlareSolverr 🔄
 - **Image:** `ghcr.io/flaresolverr/flaresolverr:latest`
-- **Purpose:** A proxy server to bypass CAPTCHA and other restrictions on torrent sites.
+- **Purpose:** A proxy server to bypass **CAPTCHAs** and restrictions on torrent sites.
 
-### 10. Recyclarr
+### 🔹 10. Recyclarr 🔄
 - **Image:** `ghcr.io/recyclarr/recyclarr:latest`
-- **Purpose:** Automates the synchronization of Trash Guide settings with Sonarr and Radarr.
+- **Purpose:** Automates the synchronization of **Trash Guide settings** with Sonarr and Radarr.
 
-## Configuration
+## ⚙️ Configuration
 
-### 1. Gluetun VPN Setup
-Edit the environment section under the Gluetun service to include your VPN credentials:
+### 🛡️ 1. Gluetun VPN Setup
+Edit the **environment** section under the Gluetun service to include your **VPN credentials**:
 ```yaml
 environment:
   - VPN_SERVICE_PROVIDER=nordvpn
@@ -83,40 +83,40 @@ environment:
   - SERVER_COUNTRIES=Netherlands
 ```
 
-### 2. Volume Paths
-Update the volume paths in the volumes section of each service to match your local directory structure. For example:
+### 📂 2. Volume Paths
+Ensure **volume paths** in the `volumes` section match your local directory structure:
 ```yaml
 volumes:
   - /home/ubuntu/docker/arr-stack/qbittorrent/config:/config
   - /home/ubuntu/docker/arr-stack/qbittorrent/downloads:/downloads
 ```
 
-### 3. Environment Variables
-Each service has environment variables for user IDs (PUID, PGID), timezone (TZ), and other settings. Adjust these as needed.
+### 🔧 3. Environment Variables
+Each service has **environment variables** for user IDs (`PUID`, `PGID`), timezone (`TZ`), and other settings. Adjust as needed.
 
-## Usage
-1. Clone this repository or copy the `docker-compose.yml` file to your server.
-2. Update the configuration as described above.
-3. Start the stack using Docker Compose:
+## ▶️ Usage
+1. **Clone this repository** or copy the `docker-compose.yml` file to your server.
+2. **Update the configuration** as described above.
+3. **Start the stack** using Docker Compose:
    ```bash
    docker-compose up -d
    ```
-4. Access the services via their respective ports (see [Ports](#ports)).
+4. **Access services** via their respective **ports** (see [Ports](#-ports)).
 
-## Ports
+## 🌍 Ports
 | Service       | Port  | Purpose |
 |--------------|------|---------|
-| qBittorrent  | 8085 | Web UI for qBittorrent |
-| Jackett      | 9117 | Web UI for Jackett |
-| Sonarr       | 8989 | Web UI for Sonarr |
-| Prowlarr     | 9696 | Web UI for Prowlarr |
-| Radarr       | 7878 | Web UI for Radarr |
-| Jellyfin     | 8096 | Web UI for Jellyfin |
-| FileBrowser  | 1298 | Web UI for FileBrowser |
-| FlareSolverr | 8191 | API endpoint for FlareSolverr |
+| qBittorrent  | 8085 | 🎥 Web UI for qBittorrent |
+| Jackett      | 9117 | 🔍 Web UI for Jackett |
+| Sonarr       | 8989 | 📺 Web UI for Sonarr |
+| Prowlarr     | 9696 | 📡 Web UI for Prowlarr |
+| Radarr       | 7878 | 🎬 Web UI for Radarr |
+| Jellyfin     | 8096 | 🍿 Web UI for Jellyfin |
+| FileBrowser  | 1298 | 📂 Web UI for FileBrowser |
+| FlareSolverr | 8191 | 🔄 API endpoint for FlareSolverr |
 
-## Volumes
-All services use Docker volumes to persist configuration and data. Ensure the following directories exist on your host machine:
+## 💾 Volumes
+Ensure the following **directories exist** on your **host machine**:
 ```
 /home/ubuntu/docker/arr-stack/gluetun
 /home/ubuntu/docker/arr-stack/qbittorrent
@@ -130,14 +130,14 @@ All services use Docker volumes to persist configuration and data. Ensure the fo
 /home/ubuntu/docker/arr-stack/recyclarr
 ```
 
-## Environment Variables
-Each service has environment variables for configuration. Key variables include:
+## 🔧 Environment Variables
+Key **environment variables**:
 - `PUID`: User ID for file permissions.
 - `PGID`: Group ID for file permissions.
 - `TZ`: Timezone (e.g., `Europe/London`).
 - `WEBUI_PORT`: Port for the service's web UI.
-- `WEBUI_USERNAME` and `WEBUI_PASSWORD`: Credentials for the web UI.
+- `WEBUI_USERNAME` and `WEBUI_PASSWORD`: Web UI credentials.
 
-## License
-This project is open-source and available under the MIT License. Feel free to modify and distribute it as needed.
+## 📜 License
+This project is **open-source** and available under the **MIT License**. Feel free to **modify** and **distribute** it as needed! 📝✨
 
