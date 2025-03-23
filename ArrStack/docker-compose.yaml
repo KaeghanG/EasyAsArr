@@ -26,8 +26,8 @@ services:
     environment:
       - VPN_SERVICE_PROVIDER=nordvpn
       - VPN_TYPE=openvpn # or wireguard
-      - OPENVPN_USER=
-      - OPENVPN_PASSWORD=
+      - OPENVPN_USER=2ic42ak8qiB4cbfZ9k4zeAvX
+      - OPENVPN_PASSWORD=vgyr8ijjRHR8Z7rr7UaanAkE
       - SERVER_COUNTRIES=Netherlands
 
   qbittorrent:
@@ -144,4 +144,8 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Etc/UTC
+      - SONARR_API_KEY=your_sonarr_api_key
+      - RADARR_API_KEY=your_radarr_api_key
+      - SONARR_URL=http://sonarr:8989
+      - RADARR_URL=http://radarr:7878
     restart: unless-stopped
