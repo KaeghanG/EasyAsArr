@@ -1,4 +1,147 @@
-# DockerCompose
+version: "3.8"
+services:
 
-List of Ease of use Docker Compose files/stacks
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    hostname: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 6881:6881
+      - 6881:6881/udp
+      - 8085:8085 # qbittorrent
+      - 9117:9117 # Jackett
+      - 8989:8989 # Sonarr
+      - 9696:9696 # Prowlarr
+      - 7878:7878 # Radarr
+      - 8096:8096 # Jellyfin
+      - 1298:8080 # FileBrowser
+      - 8191:8191 # FlareSolverr
+      
+    volumes:
+      - /home/ubuntu/docker/arr-stack/gluetun:/gluetun
+    environment:
+      - VPN_SERVICE_PROVIDER=nordvpn
+      - VPN_TYPE=openvpn # or wireguard
+      - OPENVPN_USER=
+      - OPENVPN_PASSWORD=
+      - SERVER_COUNTRIES=Netherlands
 
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - WEBUI_PORT=8085
+      - WEBUI_USERNAME=admin
+      - WEBUI_PASSWORD=admin
+    volumes:
+      - /home/ubuntu/docker/arr-stack/qbittorrent/config:/config
+      - /home/ubuntu/docker/arr-stack/qbittorrent/downloads:/downloads
+    depends_on:
+      - gluetun
+    restart: always
+
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - AUTO_UPDATE=true #optional
+      - RUN_OPTS= #optional
+    volumes:
+      - /home/ubuntu/docker/arr-stack/jackett/config:/config
+      - /home/ubuntu/docker/arr-stack/jackett/blackhole:/downloads
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /home/ubuntu/docker/arr-stack/sonarr/config:/config
+      - /home/ubuntu/docker/arr-stack/qbittorrent/downloads:/downloads
+      - /home/ubuntu/docker/arr-stack/media/tv:/tv
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /home/ubuntu/docker/arr-stack/radarr/config:/config
+      - /home/ubuntu/docker/arr-stack/qbittorrent/downloads:/downloads
+      - /home/ubuntu/docker/arr-stack/media/movies:/movies
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /home/ubuntu/docker/arr-stack/prowlarr/config:/config
+    restart: unless-stopped
+
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    user: 1000:1000
+    network_mode: "service:gluetun"
+    volumes:
+    - /home/ubuntu/docker/arr-stack/qbittorrent:/config
+    - /home/ubuntu/docker/arr-stack/qbittorrent/cache:/cache
+    - /home/ubuntu/docker/arr-stack/media:/media
+    restart: unless-stopped
+
+  filebrowser:
+    image: hurlenko/filebrowser
+    container_name: filebrowser
+    network_mode: "service:gluetun"
+    volumes:
+      - /home/ubuntu/docker:/data
+      - /home/ubuntu/docker/arr-stack/filebrowser/config:/config
+    restart: unless-stopped
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    network_mode: "service:gluetun"
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=hcaptcha-solver
+    restart: unless-stopped
+
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr:latest
+    container_name: recyclarr
+    network_mode: "service:gluetun"
+    volumes:
+      - /home/ubuntu/docker/arr-stack/recyclarr/config:/config
+      - /home/ubuntu/docker/arr-stack/recyclarr/trash-guides:/trash-guides
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    restart: unless-stopped
