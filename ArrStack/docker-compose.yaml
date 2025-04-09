@@ -26,8 +26,8 @@ services:
     environment:
       - VPN_SERVICE_PROVIDER=nordvpn
       - VPN_TYPE=openvpn # or wireguard
-      - OPENVPN_USER=2ic42ak8qiB4cbfZ9k4zeAvX
-      - OPENVPN_PASSWORD=vgyr8ijjRHR8Z7rr7UaanAkE
+      - OPENVPN_USER=
+      - OPENVPN_PASSWORD=
       - SERVER_COUNTRIES=Netherlands
 
   qbittorrent:
